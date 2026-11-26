@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ДЕМО: Тренажёр неправильных глаголов (Spotlight)</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .container { max-width: 600px; width: 100%; margin: 0 auto; }
+    .badge { display: inline-block; background: #fee2e2; color: #b91c1c; font-weight: 700; padding: 4px 12px; border-radius: 9999px; font-size: 13px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    header { text-align: center; margin-bottom: 20px; }
+    header h1 { font-size: 24px; color: #0f172a; margin-bottom: 6px; }
+    header p { color: var(--muted); font-size: 15px; }
+    .card { background: var(--card-bg); border-radius: 20px; padding: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+    .progress-bar-wrap { width: 100%; height: 8px; background: #e2e8f0; border-radius: 9999px; overflow: hidden; margin-bottom: 20px; }
+    .progress-bar { height: 100%; width: 25%; background: var(--primary); transition: width 0.3s; }
+    .word-box { background: #f1f5f9; border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 20px; }
+    .word-title { font-size: 32px; font-weight: 800; color: #0f172a; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .word-trans { font-size: 17px; color: var(--muted); margin-top: 6px; }
+    .audio-btn { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 50%; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; transition: transform 0.1s; }
+    .audio-btn:hover { transform: scale(1.08); background: #f8fafc; }
+    .prompt-label { text-align: center; font-size: 15px; font-weight: 600; color: #475569; margin-bottom: 12px; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .opt-btn { background: #ffffff; border: 2px solid var(--border); border-radius: 12px; padding: 14px 10px; font-size: 18px; font-weight: 700; color: #334155; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .opt-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #15803d !important; }
+    .opt-btn.wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: #b91c1c !important; }
+    .feedback { text-align: center; font-size: 15px; font-weight: 600; min-height: 24px; margin-bottom: 15px; }
+    .feedback.ok { color: var(--success); }
+    .feedback.err { color: var(--danger); }
+    .next-btn { width: 100%; padding: 14px; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .next-btn:hover { background: var(--primary-hover); }
+
+    /* Окно завершения демоверсии (Paywall) */
+    .paywall { text-align: center; padding: 10px 0; }
+    .paywall-icon { font-size: 48px; margin-bottom: 12px; }
+    .paywall h2 { font-size: 22px; color: #0f172a; margin-bottom: 8px; }
+    .paywall p { color: #475569; font-size: 15px; line-height: 1.5; margin-bottom: 20px; }
+    .benefits-list { text-align: left; background: #f8fafc; border-radius: 14px; padding: 16px 20px; margin-bottom: 24px; border: 1px solid var(--border); font-size: 14px; color: #334155; line-height: 1.8; }
+    .contact-title { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 12px; }
+    .contact-btns { display: flex; flex-direction: column; gap: 10px; }
+    .btn-contact { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: 700; text-decoration: none; color: #fff; transition: opacity 0.2s; }
+    .btn-contact:hover { opacity: 0.92; }
+    .btn-tg { background: #229ED9; }
+    .btn-wa { background: #25D366; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <span class="badge">Демоверсия</span>
+    <h1>Неправильные глаголы Spotlight</h1>
+    <p>Ознакомительный урок: 4 глагола из программы</p>
+  </header>
+
+  <div class="card">
+    <!-- Игровой блок -->
+    <div id="quiz-block">
+      <div class="progress-bar-wrap">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+
+      <div class="word-box">
+        <div class="word-title">
+          <span id="q-infinitive">be</span>
+          <button class="audio-btn" onclick="speakCurrentWord()" title="Озвучить слово">🔊</button>
+        </div>
+        <div id="q-translation" class="word-trans">быть, являться</div>
+      </div>
+
+      <div class="prompt-label">Выбери 2-ю форму (Past Simple):</div>
+      <div id="options-container" class="options-grid"></div>
+
+      <div id="feedback" class="feedback"></div>
+      <button id="next-btn" class="next-btn hidden" onclick="nextQuestion()">Дальше ➔</button>
+    </div>
+
+    <!-- Блок завершения с кнопками Telegram и WhatsApp -->
+    <div id="paywall-block" class="paywall hidden">
+      <div class="paywall-icon">⭐️</div>
+      <h2>Вы прошли демоверсию!</h2>
+      <p>Вы успешно познакомились с первыми глаголами. В полной версии вас ждёт полный курс для отличных оценок!</p>
+      
+      <div class="benefits-list">
+        ✔ Все 25+ глаголов по программе Spotlight (3–4 класс)<br>
+        ✔ Тренажёр произношения с микрофоном 🎙️<br>
+        ✔ Тренировка правописания букв (Spelling)<br>
+        ✔ Контекстные примеры и предложения<br>
+        ✔ Полная интерактивная таблица с озвучкой
+      </div>
+
+      <div class="contact-title">Получить доступ к полной версии:</div>
+      <div class="contact-btns">
+        <!-- КНОПКА TELEGRAM: Замените your_telegram_username на ваш ник в Telegram -->
+        <a href="https://t.me/antipova_english" target="_blank" class="btn-contact btn-tg">
+          ✈️ Написать в Telegram
+        </a>
+        
+        <!-- КНОПКА WHATSAPP: Замените 79516349974 на ваш номер телефона без плюса -->
+        <a href="https://wa.me/79516349974?text=Здравствуйте!%20Хочу%20получить%20полный%20тренажёр%20Spotlight" target="_blank" class="btn-contact btn-wa">
+          💬 Написать в WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Демо-набор: всего 4 глагола
+  const demoVerbs = [
+    { v1: 'be', v2: 'was / were', v3: 'been', ru: 'быть, являться', options: ['was / were', 'beed', 'is', 'were'] },
+    { v1: 'go', v2: 'went', v3: 'gone', ru: 'идти, ехать', options: ['went', 'goed', 'gone', 'goes'] },
+    { v1: 'have', v2: 'had', v3: 'had', ru: 'иметь, обладать', options: ['had', 'haved', 'has', 'hadden'] },
+    { v1: 'see', v2: 'saw', v3: 'seen', ru: 'видеть', options: ['saw', 'seed', 'seen', 'so'] }
+  ];
+
+  let currentIndex = 0;
+  let answered = false;
+
+  function loadQuestion() {
+    answered = false;
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('next-btn').classList.add('hidden');
+
+    const item = demoVerbs[currentIndex];
+    document.getElementById('q-infinitive').textContent = item.v1;
+    document.getElementById('q-translation').textContent = item.ru;
+    
+    // Обновляем прогресс
+    const percent = ((currentIndex + 1) / demoVerbs.length) * 100;
+    document.getElementById('progress-bar').style.width = percent + '%';
+
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
+
+    // Перемешиваем варианты
+    const opts = [...item.options].sort(() => Math.random() - 0.5);
+
+    opts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.textContent = opt;
+      btn.onclick = () => selectOption(btn, opt, item.v2);
+      container.appendChild(btn);
+    });
+
+    speakWord(item.v1);
+  }
+
+  function selectOption(button, chosen, correct) {
+    if (answered) return;
+    answered = true;
+
+    const feedback = document.getElementById('feedback');
+    const allButtons = document.querySelectorAll('.opt-btn');
+
+    if (chosen === correct) {
+      button.classList.add('correct');
+      feedback.textContent = 'Правильно! Отлично!';
+      feedback.className = 'feedback ok';
+      speakWord(chosen);
+    } else {
+      button.classList.add('wrong');
+      feedback.textContent = 'Неверно. Правильно: ' + correct;
+      feedback.className = 'feedback err';
+      allButtons.forEach(b => {
+        if (b.textContent === correct) b.classList.add('correct');
+      });
+      speakWord(correct);
+    }
+
+    document.getElementById('next-btn').classList.remove('hidden');
+  }
+
+  function nextQuestion() {
+    currentIndex++;
+    if (currentIndex < demoVerbs.length) {
+      loadQuestion();
+    } else {
+      // Завершение демоверсии -> показ окна связи
+      document.getElementById('quiz-block').classList.add('hidden');
+      document.getElementById('paywall-block').classList.remove('hidden');
+    }
+  }
+
+  function speakWord(text) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = 0.85;
+      window.speechSynthesis.speak(u);
+    }
+  }
+
+  function speakCurrentWord() {
+    speakWord(demoVerbs[currentIndex].v1);
+  }
+
+  // Запуск при открытии
+  window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
