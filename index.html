@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Неправильные глаголы Spotlight 3-4</title>
+<style>
+  :root {
+    --primary: #4A90E2;
+    --primary-dark: #357ABD;
+    --accent: #FF7043;
+    --success: #66BB6A;
+    --error: #EF5350;
+    --bg: #F4F7FB;
+    --card-bg: #FFFFFF;
+    --text: #2C3E50;
+    --text-light: #7F8C8D;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  header {
+    background: linear-gradient(135deg, #4A90E2, #67B26F);
+    color: white;
+    padding: 24px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.25);
+  }
+
+  header h1 {
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    font-size: 16px;
+    opacity: 0.95;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 10px;
+    background: #E2E8F0;
+    padding: 6px;
+    border-radius: 14px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  }
+
+  /* Таблица */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #EEF4FD;
+    color: var(--primary-dark);
+    padding: 12px 14px;
+    border-radius: 8px;
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #EDF2F7;
+  }
+
+  tr:hover td {
+    background-color: #F8FAFC;
+  }
+
+  .audio-icon-btn {
+    background: #EBF3FF;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary);
+    transition: 0.2s;
+  }
+
+  .audio-icon-btn:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  /* Тренажер */
+  .modes-select {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .mode-pill {
+    padding: 8px 16px;
+    border: 2px solid #E2E8F0;
+    border-radius: 20px;
+    background: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .mode-pill.active {
+    border-color: var(--primary);
+    background: #EEF5FF;
+    color: var(--primary);
+  }
+
+  .quiz-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .progress-bar-container {
+    width: 100%;
+    background: #E2E8F0;
+    height: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #66BB6A, #4A90E2);
+    transition: width 0.3s;
+  }
+
+  .word-card {
+    background: linear-gradient(135deg, #FFF9E6, #FFF0D4);
+    border: 2px dashed #FFB74D;
+    padding: 24px 36px;
+    border-radius: 18px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #E65100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 260px;
+  }
+
+  .sub-hint {
+    font-size: 14px;
+    font-weight: normal;
+    color: #8D6E63;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .sentence-box {
+    background: #F8FAFC;
+    border: 2px solid #CBD5E1;
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-size: 20px;
+    color: #1E293B;
+    line-height: 1.6;
+    max-width: 540px;
+  }
+
+  .sentence-box .blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 3px dashed #4A90E2;
+    color: #4A90E2;
+    font-weight: bold;
+    padding: 0 6px;
+  }
+
+  .spell-input-wrap {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    justify-content: center;
+  }
+
+  .spell-input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 20px;
+    border: 2px solid #CBD5E1;
+    border-radius: 12px;
+    outline: none;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: 0.2s;
+  }
+
+  .spell-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  }
+
+  .check-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .check-btn:hover {
+    background: #3B78C4;
+  }
+
+  .option-btn {
+    background: white;
+    border: 2px solid #E2E8F0;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover {
+    border-color: var(--primary);
+    background: #F0F7FF;
+  }
+
+  .option-btn.correct {
+    background: #C8E6C9 !important;
+    border-color: #4CAF50 !important;
+    color: #2E7D32;
+  }
+
+  .option-btn.wrong {
+    background: #FFCDD2 !important;
+    border-color: #F44336 !important;
+    color: #C62828;
+  }
+
+  /* Микрофон */
+  .mic-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .mic-button {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: none;
+    background: #FF7043;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(255, 112, 67, 0.4);
+    transition: all 0.2s;
+  }
+
+  .mic-button:hover {
+    transform: scale(1.06);
+  }
+
+  .mic-button.recording {
+    background: #EF5350;
+    animation: pulse 1.2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 83, 80, 0.6); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 16px rgba(239, 83, 80, 0); }
+    100% { transform: scale(1); }
+  }
+
+  .speech-result-box {
+    min-height: 44px;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .feedback-message {
+    font-size: 18px;
+    font-weight: bold;
+    min-height: 28px;
+  }
+
+  .nav-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .nav-btn:hover {
+    background: var(--primary-dark);
+  }
+
+  .score-badge {
+    background: #E8F5E9;
+    color: #2E7D32;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .congrats-card {
+    text-align: center;
+    padding: 30px;
+  }
+
+  .congrats-card h2 {
+    font-size: 28px;
+    color: #2E7D32;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🌟 Английские глаголы: Spotlight 3–4 класс</h1>
+    <p>Учи таблицу, слушай правильное произношение и тренируй формы в играх с микрофоном!</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('table-tab')">📋 Таблица глаголов</button>
+    <button class="tab-btn" onclick="switchTab('trainer-tab')">🎮 Интерактивный тренажёр</button>
+  </div>
+
+  <!-- Вкладка 1: Таблица -->
+  <div id="table-tab" class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="font-size: 20px; color: var(--primary-dark);">Глаголы из курса Spotlight 3 и 4</h2>
+      <span style="font-size:13px; color:var(--text-light);">Нажми 🔊, чтобы услышать</span>
+    </div>
+    
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Инфинитив (V1)</th>
+            <th>Прошедшее (V2 / Past)</th>
+            <th>Перевод</th>
+            <th>Пример из Spotlight</th>
+            <th>Звук</th>
+          </tr>
+        </thead>
+        <tbody id="verbs-table-body">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Вкладка 2: Тренажер -->
+  <div id="trainer-tab" class="card hidden">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div class="modes-select">
+        <button class="mode-pill active" onclick="setMode('quiz')">🧩 Выбери форму</button>
+        <button class="mode-pill" onclick="setMode('sentence')">📖 Вставь в историю Spotlight</button>
+        <button class="mode-pill" onclick="setMode('spell')">✏️ Собери по буквам</button>
+        <button class="mode-pill" onclick="setMode('mic')">🎙️ Скажи в микрофон</button>
+      </div>
+      <div class="score-badge">Очки: <span id="score-val">0</span> ⭐</div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <br>
+
+    <!-- Игровой экран -->
+    <div id="game-view" class="quiz-area">
+      <div class="word-card">
+        <div id="q-word">go</div>
+        <div class="sub-hint" id="q-hint">идти / ехать</div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="audio-icon-btn" onclick="playCurrentQuestionAudio()" title="Послушать подсказку">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Вариант 1: Предложение Spotlight -->
+      <div id="sentence-box" class="sentence-box hidden"></div>
+
+      <!-- Вариант 2: Кнопки выбора -->
+      <div class="options-grid" id="options-box"></div>
+
+      <!-- Вариант 3: Написание слова / по буквам -->
+      <div id="spell-box" class="spell-input-wrap hidden">
+        <input type="text" id="spell-input" class="spell-input" placeholder="Напиши форму Past Simple..." autocomplete="off">
+        <button class="check-btn" onclick="checkSpelling()">Готово ✔</button>
+      </div>
+
+      <!-- Вариант 4: Микрофон -->
+      <div class="mic-container hidden" id="mic-box">
+        <p style="font-size: 15px; color: var(--text-light);">Нажми на микрофон и чётко назови вторую форму (Past Simple):</p>
+        <button class="mic-button" id="mic-btn" onclick="toggleSpeechRecognition()">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </button>
+        <div class="speech-result-box" id="speech-result">Жду голосового ответа...</div>
+      </div>
+
+      <div class="feedback-message" id="feedback"></div>
+
+      <button class="nav-btn hidden" id="next-btn" onclick="nextQuestion()">Следующее слово ➡️</button>
+    </div>
+
+    <!-- Экран завершения -->
+    <div id="results-view" class="congrats-card hidden">
+      <h2>🎉 Отличная работа!</h2>
+      <p style="font-size: 18px; margin-bottom: 20px;">Ты прошёл все вопросы раунда и набрал <b id="final-score">0</b> очков!</p>
+      <button class="nav-btn" onclick="restartTrainer()">Пройти ещё раз 🔄</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Ключевые глаголы Spotlight 3 и 4
+const verbsData = [
+  { v1: "be (am/is/are)", v2: "was / were", cleanV2: "was", ru: "быть, находиться", ex: "I was at the zoo yesterday." },
+  { v1: "go", v2: "went", cleanV2: "went", ru: "идти, ехать", ex: "Lulu went to the park." },
+  { v1: "see", v2: "saw", cleanV2: "saw", ru: "видеть", ex: "We saw a funny chimp." },
+  { v1: "have", v2: "had", cleanV2: "had", ru: "иметь", ex: "Larry had a great day." },
+  { v1: "come", v2: "came", cleanV2: "came", ru: "приходить", ex: "He came home at five." },
+  { v1: "make", v2: "made", cleanV2: "made", ru: "делать, мастерить", ex: "Maya made a sandcastle." },
+  { v1: "eat", v2: "ate", cleanV2: "ate", ru: "есть, кушать", ex: "Chuckles ate a banana." },
+  { v1: "drink", v2: "drank", cleanV2: "drank", ru: "пить", ex: "They drank orange juice." },
+  { v1: "ride", v2: "rode", cleanV2: "rode", ru: "кататься верхом", ex: "I rode a bike last Sunday." },
+  { v1: "swim", v2: "swam", cleanV2: "swam", ru: "плавать", ex: "We swam in the sea." },
+  { v1: "sing", v2: "sang", cleanV2: "sang", ru: "петь", ex: "Paco sang a nice song." },
+  { v1: "buy", v2: "bought", cleanV2: "bought", ru: "покупать", ex: "Mum bought some apples." },
+  { v1: "give", v2: "gave", cleanV2: "gave", ru: "давать", ex: "He gave me a present." },
+  { v1: "draw", v2: "drew", cleanV2: "drew", ru: "рисовать", ex: "Nanny Shine drew a picture." },
+  { v1: "write", v2: "wrote", cleanV2: "wrote", ru: "писать", ex: "I wrote a letter to Santa." }
+];
+
+function renderTable() {
+  const tbody = document.getElementById("verbs-table-body");
+  tbody.innerHTML = verbsData.map((item) => `
+    <tr>
+      <td><strong style="color: #2B6CB0;">${item.v1}</strong></td>
+      <td><strong style="color: #D97706;">${item.v2}</strong></td>
+      <td>${item.ru}</td>
+      <td style="font-style: italic; color: #4B5563;">${item.ex}</td>
+      <td>
+        <button class="audio-icon-btn" onclick="speakText('${item.v1}, ${item.v2}')" title="Слушать">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+          </svg>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function speakText(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('table-tab').classList.add('hidden');
+  document.getElementById('trainer-tab').classList.add('hidden');
+
+  if (tabId === 'table-tab') {
+    document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+    document.getElementById('table-tab').classList.remove('hidden');
+  } else {
+    document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+    document.getElementById('trainer-tab').classList.remove('hidden');
+    if (questionsQueue.length === 0) startTrainer();
+  }
+}
+
+let currentMode = 'quiz';
+function setMode(mode) {
+  currentMode = mode;
+  const pills = document.querySelectorAll('.mode-pill');
+  pills.forEach(p => p.classList.remove('active'));
+
+  document.getElementById('options-box').classList.add('hidden');
+  document.getElementById('mic-box').classList.add('hidden');
+  document.getElementById('sentence-box').classList.add('hidden');
+  document.getElementById('spell-box').classList.add('hidden');
+
+  if (mode === 'quiz') {
+    pills[0].classList.add('active');
+    document.getElementById('options-box').classList.remove('hidden');
+  } else if (mode === 'sentence') {
+    pills[1].classList.add('active');
+    document.getElementById('sentence-box').classList.remove('hidden');
+    document.getElementById('options-box').classList.remove('hidden');
+  } else if (mode === 'spell') {
+    pills[2].classList.add('active');
+    document.getElementById('spell-box').classList.remove('hidden');
+  } else if (mode === 'mic') {
+    pills[3].classList.add('active');
+    document.getElementById('mic-box').classList.remove('hidden');
+  }
+  loadCurrentQuestion();
+}
+
+let questionsQueue = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+
+function startTrainer() {
+  score = 0;
+  currentIndex = 0;
+  document.getElementById('score-val').innerText = score;
+  questionsQueue = [...verbsData].sort(() => Math.random() - 0.5);
+  document.getElementById('game-view').classList.remove('hidden');
+  document.getElementById('results-view').classList.add('hidden');
+  loadCurrentQuestion();
+}
+
+function loadCurrentQuestion() {
+  answered = false;
+  document.getElementById('next-btn').classList.add('hidden');
+  document.getElementById('feedback').innerText = '';
+  document.getElementById('speech-result').innerText = 'Жду голосового ответа...';
+  document.getElementById('speech-result').style.borderColor = '#E2E8F0';
+  
+  const spellInput = document.getElementById('spell-input');
+  if (spellInput) {
+    spellInput.value = '';
+    spellInput.disabled = false;
+  }
+
+  if (currentIndex >= questionsQueue.length) {
+    showResults();
+    return;
+  }
+
+  const cur = questionsQueue[currentIndex];
+  document.getElementById('q-word').innerText = cur.v1;
+  document.getElementById('q-hint').innerText = `${cur.ru}`;
+  
+  if (currentMode === 'sentence') {
+    const sBox = document.getElementById('sentence-box');
+    const parts = cur.ex.split(new RegExp(`\\b${cur.cleanV2}\\b`, 'i'));
+    if (parts.length > 1) {
+      sBox.innerHTML = `${parts[0]} <span class="blank">[ ${cur.v1} ]</span> ${parts.slice(1).join('')}`;
+    } else {
+      sBox.innerHTML = cur.ex.replace(cur.cleanV2, `<span class="blank">[ ${cur.v1} ]</span>`);
+    }
+  }
+
+  const progressPercent = (currentIndex / questionsQueue.length) * 100;
+  document.getElementById('progress-bar').style.width = progressPercent + '%';
+
+  const optionsBox = document.getElementById('options-box');
+  optionsBox.innerHTML = '';
+
+  if (currentMode === 'quiz' || currentMode === 'sentence') {
+    const distractors = verbsData
+      .filter(v => v.cleanV2 !== cur.cleanV2)
+      .map(v => v.cleanV2)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    
+    const choices = [cur.cleanV2, ...distractors].sort(() => Math.random() - 0.5);
+
+    choices.forEach(ch => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerText = ch;
+      btn.onclick = () => handleChoice(btn, ch, cur.cleanV2);
+      optionsBox.appendChild(btn);
+    });
+  }
+
+  if (currentMode === 'spell') {
+    setTimeout(() => spellInput && spellInput.focus(), 100);
+  }
+}
+
+function checkSpelling() {
+  if (answered) return;
+  const input = document.getElementById('spell-input');
+  const val = input.value.trim().toLowerCase();
+  const cur = questionsQueue[currentIndex];
+  const correct = cur.cleanV2.toLowerCase();
+  const feedback = document.getElementById('feedback');
+
+  if (!val) return;
+  answered = true;
+  input.disabled = true;
+
+  if (val === correct) {
+    feedback.innerText = '✨ Точно в цель! Грамотно написано!';
+    feedback.style.color = '#2E7D32';
+    score += 15;
+    document.getElementById('score-val').innerText = score;
+    speakText('Correct! ' + cur.cleanV2);
+  } else {
+    feedback.innerText = `Не совсем так. Правильно: ${cur.cleanV2}`;
+    feedback.style.color = '#C62828';
+    speakText('Right spelling is ' + cur.cleanV2);
+  }
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function playCurrentQuestionAudio() {
+  const cur = questionsQueue[currentIndex];
+  speakText(cur.v1);
+}
+
+function handleChoice(btn, selected, correct) {
+  if (answered) return;
+  answered = true;
+
+  const feedback = document.getElementById('feedback');
+  if (selected.toLowerCase() === correct.toLowerCase()) {
+    btn.classList.add('correct');
+    feedback.innerText = '🌟 Молодец! Абсолютно верно!';
+    feedback.style.color = '#2E7D32';
+    score += 10;
+    document.getElementById('score-val').innerText = score;
+    speakText("Excellent! " + correct);
+  } else {
+    btn.classList.add('wrong');
+    feedback.innerText = `Упс! Правильная форма: ${correct}`;
+    feedback.style.color = '#C62828';
+    document.querySelectorAll('.option-btn').forEach(b => {
+      if (b.innerText.toLowerCase() === correct.toLowerCase()) b.classList.add('correct');
+    });
+    speakText("Try next time. Correct is " + correct);
+  }
+
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  loadCurrentQuestion();
+}
+
+function showResults() {
+  document.getElementById('game-view').classList.add('hidden');
+  document.getElementById('results-view').classList.remove('hidden');
+  document.getElementById('final-score').innerText = score;
+  document.getElementById('progress-bar').style.width = '100%';
+}
+
+function restartTrainer() {
+  startTrainer();
+}
+
+let recognition = null;
+let isRecording = false;
+
+function initSpeech() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return null;
+  const recog = new SpeechRecognition();
+  recog.lang = 'en-US';
+  recog.continuous = false;
+  recog.interimResults = false;
+
+  recog.onstart = () => {
+    isRecording = true;
+    document.getElementById('mic-btn').classList.add('recording');
+    document.getElementById('speech-result').innerText = 'Слушаю... Говори!';
+  };
+
+  recog.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.toLowerCase().trim();
+    evaluateVoiceAnswer(transcript);
+  };
+
+  recog.onerror = () => {
+    document.getElementById('speech-result').innerText = 'Не удалось распознать. Попробуй ещё раз.';
+    stopRecording();
+  };
+
+  recog.onend = () => {
+    stopRecording();
+  };
+
+  return recog;
+}
+
+function stopRecording() {
+  isRecording = false;
+  document.getElementById('mic-btn').classList.remove('recording');
+}
+
+function toggleSpeechRecognition() {
+  if (answered) return;
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert("Голосовой ввод лучше всего работает в Google Chrome или Яндекс Браузере.");
+    return;
+  }
+
+  if (!recognition) {
+    recognition = initSpeech();
+  }
+
+  if (isRecording) {
+    recognition.stop();
+  } else {
+    try {
+      recognition.start();
+    } catch(err) {
+      console.log(err);
+    }
+  }
+}
+
+function evaluateVoiceAnswer(saidText) {
+  answered = true;
+  const cur = questionsQueue[currentIndex];
+  const target = cur.cleanV2.toLowerCase();
+  const resBox = document.getElementById('speech-result');
+  const feedback = document.getElementById('feedback');
+
+  const cleanSaid = saidText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  resBox.innerText = `Ты сказал: "${cleanSaid}"`;
+
+  const isMatch = cleanSaid === target || 
+                  cleanSaid.includes(target) || 
+                  (cur.v2.toLowerCase().includes(cleanSaid) && cleanSaid.length > 2);
+
+  if (isMatch) {
+    resBox.style.borderColor = '#4CAF50';
+    feedback.innerText = '🎯 Браво! Произношение верное!';
+    feedback.style.color = '#2E7D32';
+    score += 15;
+    document.getElementById('score-val').innerText = score;
+    speakText("Great job! " + cur.cleanV2);
+  } else {
+    resBox.style.borderColor = '#EF5350';
+    feedback.innerText = `Было сказано "${cleanSaid}". Нужная форма: ${cur.cleanV2}`;
+    feedback.style.color = '#C62828';
+    speakText("The answer is " + cur.cleanV2);
+  }
+
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+window.onload = () => {
+  renderTable();
+  startTrainer();
+};
+</script>
+</body>
+</html>
